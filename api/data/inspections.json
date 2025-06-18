@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "location": "Trenton Industrial Park",
+    "status": "Failed",
+    "inspector": "Dana Kowalski",
+    "type": "Water",
+    "priority": "High",
+    "violations": [
+      "Mercury contamination",
+      "Unsealed waste barrels"
+    ],
+    "coordinates": {
+      "lat": 40.2206,
+      "lng": -74.7597
+    }
+  },
+  {
+    "id": 2,
+    "location": "Passaic River",
+    "status": "Failed",
+    "inspector": "John Chu",
+    "type": "Water",
+    "priority": "High",
+    "violations": [
+      "Mercury contamination",
+      "Pesticide contamination",
+      "Heavy metal contamination"
+    ],
+    "coordinates": {
+      "lat": 40.7391,
+      "lng": -74.1635
+    }
+  }
+]

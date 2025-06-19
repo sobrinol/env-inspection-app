@@ -1,35 +1,85 @@
 [
   {
     "id": 1,
-    "location": "Trenton Industrial Park",
-    "status": "Failed",
-    "inspector": "Dana Kowalski",
-    "type": "Water",
-    "priority": "High",
-    "violations": [
-      "Mercury contamination",
-      "Unsealed waste barrels"
-    ],
+    "location": "Millstone River Outfall #27, Franklin Twp, NJ",
+    "status": "Completed",
+    "inspector": "L. Nguyen",
+    "type": "Stormwater",
+    "priority": "Medium",
+    "violations": [],
     "coordinates": {
-      "lat": 40.2206,
-      "lng": -74.7597
-    }
+      "lat": 40.5031,
+      "lng": -74.5138
+    },
+    "notes": "No evidence of illicit discharge or erosion observed. Vegetative buffer intact. Recommend routine quarterly monitoring.",
+    "date": "2025-06-13T08:45:00.000Z"
   },
   {
     "id": 2,
-    "location": "Passaic River",
-    "status": "Failed",
-    "inspector": "John Chu",
-    "type": "Water",
+    "location": "Sunoco Gas Station, 200 Rt 22 E, Green Brook, NJ",
+    "status": "Follow-up Required",
+    "inspector": "M. Rosales",
+    "type": "UST Compliance",
     "priority": "High",
     "violations": [
-      "Mercury contamination",
-      "Pesticide contamination",
-      "Heavy metal contamination"
+      "Leak detection system offline",
+      "No current cathodic protection test results"
     ],
     "coordinates": {
-      "lat": 40.7391,
-      "lng": -74.1635
-    }
+      "lat": 40.6076,
+      "lng": -74.4614
+    },
+    "notes": "Operator unable to provide documentation for monthly walkthroughs. 14-day deadline issued for corrective action.",
+    "date": "2025-06-14T11:20:00.000Z"
+  },
+  {
+    "id": 3,
+    "location": "Allied Manufacturing Plant, 901 Ridge Rd, Piscataway, NJ",
+    "status": "In Progress",
+    "inspector": "T. Chowdhury",
+    "type": "Air Quality",
+    "priority": "High",
+    "violations": [
+      "Particulate emissions exceed permit threshold"
+    ],
+    "coordinates": {
+      "lat": 40.5548,
+      "lng": -74.4656
+    },
+    "notes": "Stack test results under review. Facility notified of potential Notice of Violation pending lab results.",
+    "date": "2025-06-17T14:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "location": "Maplewood Water Treatment Plant, Maplewood, NJ",
+    "status": "Completed",
+    "inspector": "A. Cooper",
+    "type": "Drinking Water",
+    "priority": "Low",
+    "violations": [],
+    "coordinates": {
+      "lat": 40.7292,
+      "lng": -74.2719
+    },
+    "notes": "Chlorine residual within acceptable range. Monthly sampling logs properly maintained. No deficiencies noted.",
+    "date": "2025-06-12T13:30:00.000Z"
+  },
+  {
+    "id": 5,
+    "location": "Central Park",
+    "status": "Open",
+    "inspector": "Jane Smith",
+    "type": "Air Quality",
+    "priority": "High",
+    "violations": [
+      "Dust",
+      "Smoke"
+    ],
+    "coordinates": {
+      "lat": 40.785091,
+      "lng": -73.968285
+    },
+    "notes": "Initial inspection done.",
+    "date": "2025-06-19T02:58:44.414Z"
   }
 ]

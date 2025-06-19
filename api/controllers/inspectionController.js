@@ -1,140 +1,117 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
+const { inspectionSchema } = require("../models/inspection");
 
 const inspectionsFile = path.join(__dirname, "../data/inspections.json");
 
-function readInspections() {
-  const data = fs.readFileSync(inspectionsFile, "utf8");
+async function readInspections() {
+  const data = await fs.readFile(inspectionsFile, "utf8");
   return JSON.parse(data);
 }
 
-function writeInspections(data) {
-  fs.writeFileSync(inspectionsFile, JSON.stringify(data, null, 2));
+async function writeInspections(data) {
+  await fs.writeFile(inspectionsFile, JSON.stringify(data, null, 2));
 }
 
-exports.patchInspection = (req, res) => {
-  const id = parseInt(req.params.id, 10);
+exports.deleteInspectionById = async (req, res, next) => {
+  try {
+    const inspections = await readInspections();
+    const id = parseInt(req.params.id, 10);
 
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid inspection ID." });
-  }
-
-  const inspections = readInspections();
-  const inspectionIndex = inspections.findIndex((insp) => insp.id === id);
-
-  if (inspectionIndex === -1) {
-    return res.status(404).json({ error: "Inspection not found." });
-  }
-
-  const allowedFields = [
-    "location",
-    "status",
-    "notes",
-    "inspector",
-    "type",
-    "priority",
-    "violations",
-    "coordinates",
-  ];
-
-  const updates = {};
-  for (const key of Object.keys(req.body)) {
-    if (allowedFields.includes(key)) {
-      updates[key] = req.body[key];
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid inspection ID." });
     }
+
+    const inspectionIndex = inspections.findIndex((insp) => insp.id === id);
+
+    if (inspectionIndex === -1) {
+      return res.status(404).json({ error: "Inspection not found." });
+    }
+
+    inspections.splice(inspectionIndex, 1);
+
+    await writeInspections(inspections);
+
+    res.status(204).send();
+  } catch (err) {
+    next(err);
   }
-
-  if (updates.violations && !Array.isArray(updates.violations)) {
-    return res.status(400).json({ error: "Violations must be an array." });
-  }
-
-  if (
-    updates.coordinates &&
-    (typeof updates.coordinates.lat !== "number" ||
-      typeof updates.coordinates.lng !== "number")
-  ) {
-    return res
-      .status(400)
-      .json({ error: "Coordinates must be an object with numberic lat/lng." });
-  }
-
-  inspections[inspectionIndex] = {
-    ...inspections[inspectionIndex],
-    ...updates,
-    date: new Date().toISOString,
-  };
-
-  writeInspections(inspections);
-
-  res.json(inspections[inspectionIndex]);
 };
 
-exports.getInspections = (req, res) => {
-  const inspections = readInspections();
-  res.json(inspections);
+exports.patchInspection = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid inspection ID." });
+    }
+
+    const inspections = await readInspections();
+    const inspectionIndex = inspections.findIndex((insp) => insp.id === id);
+
+    if (inspectionIndex === -1) {
+      return res.status(404).json({ error: "Inspection not found." });
+    }
+
+    inspections[inspectionIndex] = {
+      ...inspections[inspectionIndex],
+      ...req.body,
+      date: new Date().toISOString(),
+    };
+
+    await writeInspections(inspections);
+
+    res.json(inspections[inspectionIndex]);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.getInspectionsById = (req, res) => {
-  const inspections = readInspections();
-  const id = parseInt(req.params.id, 10);
-
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid inspection ID." });
+exports.getInspections = async (req, res, next) => {
+  try {
+    const inspections = await readInspections();
+    res.json(inspections);
+  } catch (err) {
+    next(err);
   }
-
-  const inspection = inspections.find((insp) => insp.id === id);
-
-  if (!inspection) {
-    return res.status(404).json({ error: "Inspection not found." });
-  }
-
-  res.json(inspection);
 };
 
-exports.createInspection = (req, res) => {
-  const {
-    location,
-    status,
-    inspector,
-    type,
-    priority,
-    violations,
-    coordinates,
-    notes,
-  } = req.body;
+exports.getInspectionsById = async (req, res, next) => {
+  try {
+    const inspections = await readInspections();
+    const id = parseInt(req.params.id, 10);
 
-  if (!location || !status || !notes || !inspector || !type) {
-    return res.status(400).json({
-      error:
-        "Missing required fields: location, status, notes, inspector, and type.",
-    });
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid inspection ID." });
+    }
+
+    const inspection = inspections.find((insp) => insp.id === id);
+
+    if (!inspection) {
+      return res.status(404).json({ error: "Inspection not found." });
+    }
+
+    res.json(inspection);
+  } catch (err) {
+    next(err);
   }
+};
 
-  if (
-    coordinates &&
-    (typeof coordinates.lat !== "number" || typeof coordinates.lng !== "number")
-  ) {
-    return res
-      .status(400)
-      .json({ error: "Coordinates must be an object with numeric lat/lng." });
+exports.createInspection = async (req, res, next) => {
+  try {
+    const inspections = await readInspections();
+
+    const newInspection = {
+      id: inspections.length + 1,
+      ...req.body,
+      date: new Date().toISOString(),
+    };
+
+    inspections.push(newInspection);
+    await writeInspections(inspections);
+
+    res.status(201).json(newInspection);
+  } catch (err) {
+    next(err);
   }
-
-  const inspections = readInspections();
-
-  const newInspection = {
-    id: inspections.length + 1,
-    location,
-    status,
-    inspector,
-    type,
-    priority: priority || "Medium",
-    violations: violations || [],
-    coordinates: coordinates || null,
-    date: new Date().toISOString,
-  };
-
-  inspections.push(newInspection);
-  writeInspections(inspections);
-  //201 code signifies successful creation
-  res.status(201).json(newInspection);
 };

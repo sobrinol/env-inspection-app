@@ -1,24 +1,27 @@
 const connectDB = require("../database/connectDB");
+const { formatInspectionForResponse } = require("../utils/formatters");
 
 exports.deleteInspectionById = async (req, res, next) => {
   try {
-    const inspections = await readInspections();
+    const db = await connectDB();
     const id = parseInt(req.params.id, 10);
 
     if (isNaN(id)) {
       return res.status(400).json({ error: "Invalid inspection ID." });
     }
 
-    const inspectionIndex = inspections.findIndex((insp) => insp.id === id);
+    const inspection = await db.get("SELECT * FROM inspections WHERE id = ?", [
+      id,
+    ]);
 
-    if (inspectionIndex === -1) {
+    if (!inspection) {
+      await db.close();
       return res.status(404).json({ error: "Inspection not found." });
     }
 
-    inspections.splice(inspectionIndex, 1);
+    await db.run("DELETE FROM inspections WHERE id = ?", [id]);
 
-    await writeInspections(inspections);
-
+    await db.close();
     res.status(204).send();
   } catch (err) {
     next(err);
@@ -34,12 +37,11 @@ exports.patchInspection = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid inspection ID." });
     }
 
-    const existingInspection = await db.get(
-      "SELECT * FROM inspections WHERE id = ?",
-      [id]
-    );
+    const inspection = await db.get("SELECT * FROM inspections WHERE id = ?", [
+      id,
+    ]);
 
-    if (!existingInspection) {
+    if (!inspection) {
       await db.close();
       return res.status(404).json({ error: "Inspection not found." });
     }
@@ -189,20 +191,116 @@ exports.createInspection = async (req, res, next) => {
   }
 };
 
-function formatInspectionForResponse(inspection) {
-  return {
-    id: inspection.id,
-    location: inspection.location,
-    status: inspection.status,
-    inspector: inspection.inspector,
-    type: inspection.type,
-    priority: inspection.priority,
-    violations: JSON.parse(inspection.violations || "[]"),
-    coordinates:
-      inspection.coordinates_lat && inspection.coordinates_lng
-        ? { lat: inspection.coordinates_lat, lng: inspection.coordinates_lng }
-        : null,
-    notes: inspection.notes,
-    date: inspection.date,
-  };
-}
+exports.getInspectionStats = async (req, res, next) => {
+  try {
+    const db = await connectDB();
+
+    const totalResult = await db.get(
+      "SELECT  COUNT(*) as total FROM inspections"
+    );
+    const total = totalResult.total;
+
+    const statusStats = await db.all(`
+      SELECT status, COUNT(*) as count
+      FROM inspections
+      GROUP BY status
+    `);
+
+    const typeStats = await db.all(`
+      SELECT type, COUNT(*) as count
+      FROM inspections
+      GROUP BY type  
+    `);
+
+    const priorityStats = await db.all(`
+      SELECT priority, COUNT(*) as count
+      FROM inspections
+      GROUP BY priority  
+    `);
+
+    const violationsResult = await db.get(`
+      SELECT
+        COUNT(*) as total_with_violations
+      FROM inspections
+      WHERE violations != '[]' AND violations IS NOT null
+    `);
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const recentResult = await db.get(
+      `
+      SELECT COUNT(*) as recent_count 
+      FROM inspections 
+      WHERE date >= ?
+    `,
+      [thirtyDaysAgo.toISOString()]
+    );
+
+    await db.close();
+
+    const stats = {
+      total: total,
+      byStatus: statusStats.reduce((acc, item) => {
+        acc[item.status] = item.count;
+        return acc;
+      }, {}),
+      byType: typeStats.reduce((acc, item) => {
+        acc[item.type] = item.count;
+        return acc;
+      }, {}),
+      byPriority: priorityStats.reduce((acc, item) => {
+        acc[item.priority] = item.count;
+        return acc;
+      }, {}),
+      withViolations: violationsResult.total_with_violations,
+      recentInspections: recentResult.recent_count,
+      generatedAt: new Date().toISOString(),
+    };
+
+    res.json(stats);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.searchInspections = async (req, res, next) => {
+  try {
+    const db = await connectDB();
+    const searchTerm = req.query.q;
+
+    if (!searchTerm || searchTerm.trim() === "") {
+      return res.status(400).json({ error: "Search query required" });
+    }
+
+    const searchPattern = `%${searchTerm}%`;
+    const inspections = await db.all(
+      `SELECT * FROM inspections 
+   WHERE location LIKE ? 
+      OR notes LIKE ? 
+      OR inspector LIKE ?
+      OR status LIKE ?
+      OR type LIKE ?
+      OR priority LIKE ?
+   ORDER BY date DESC`,
+      [
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+      ]
+    );
+
+    const formattedInspections = inspections.map(formatInspectionForResponse);
+    await db.close();
+    res.json({
+      results: formattedInspections,
+      count: formattedInspections.length,
+      searchTerm: searchTerm,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -6,6 +6,9 @@ const {
   createInspection,
   patchInspection,
   deleteInspectionById,
+  getInspectionStats,
+  debugInspections,
+  searchInspections,
 } = require("../controllers/inspectionController");
 
 const validate = require("../middleware/validate");
@@ -15,9 +18,14 @@ const {
 } = require("../models/inspection");
 
 router.get("/", getInspections);
+router.get("/search", searchInspections);
+router.get("/stats", getInspectionStats);
 router.get("/:id", getInspectionsById);
+
 router.post("/", validate(inspectionSchema), createInspection);
+
 router.patch("/:id", validate(updateInspectionSchema), patchInspection);
+
 router.delete("/:id", deleteInspectionById);
 
 module.exports = router;

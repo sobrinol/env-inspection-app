@@ -120,7 +120,10 @@ exports.getInspectionsById = async (req, res, next) => {
     const id = parseInt(req.params.id, 10);
 
     if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid inspection ID." });
+      await db.close();
+      return res
+        .status(400)
+        .json({ error: `Invalid inspection ID input: ${id}` });
     }
 
     const inspection = await db.get("SELECT * FROM inspections WHERE id = ?", [
@@ -129,14 +132,15 @@ exports.getInspectionsById = async (req, res, next) => {
 
     if (!inspection) {
       await db.close();
-      return res.status(404).json({ error: "Inspection not found." });
+      return res
+        .status(404)
+        .json({ error: `Inspection with ID: ${id} does not exist` });
     }
 
-    const formattedInspections = formatInspectionForResponse(inspection);
+    const formattedInspection = formatInspectionForResponse(inspection);
 
     await db.close();
-
-    res.json(formattedInspections);
+    res.json(formattedInspection);
   } catch (err) {
     next(err);
   }

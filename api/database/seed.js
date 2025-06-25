@@ -15,7 +15,7 @@ const sampleInspections = [
     coordinates_lng: -74.1776,
     notes:
       "Follow-up inspection required within 30 days. Potential groundwater contamination detected.",
-    date: new Date("2024-06-20").toISOString(),
+    date: new Date().toISOString(),
   },
   {
     location: "Paterson Industrial Park - Building 7",
@@ -27,7 +27,7 @@ const sampleInspections = [
     coordinates_lat: 40.9168,
     coordinates_lng: -74.1707,
     notes: "Routine inspection completed. All equipment within compliance.",
-    date: new Date("2024-06-18").toISOString(),
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Camden Waterfront Facility",
@@ -43,7 +43,7 @@ const sampleInspections = [
     coordinates_lng: -75.1652,
     notes:
       "Superfund site assessment ongoing. Immediate remediation action required.",
-    date: new Date("2024-06-15").toISOString(),
+    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Trenton Manufacturing Center",
@@ -56,7 +56,7 @@ const sampleInspections = [
     coordinates_lng: -74.7563,
     notes:
       "Annual compliance check. All waste disposal procedures properly documented.",
-    date: new Date("2024-06-12").toISOString(),
+    date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Atlantic City Refinery Complex",
@@ -72,7 +72,7 @@ const sampleInspections = [
     coordinates_lng: -74.4229,
     notes:
       "Elevated sulfur dioxide readings detected. Requesting immediate corrective action plan.",
-    date: new Date("2024-06-10").toISOString(),
+    date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Jersey City Port Authority",
@@ -85,7 +85,7 @@ const sampleInspections = [
     coordinates_lng: -74.0431,
     notes:
       "Small containment issue resolved on-site. Follow-up scheduled for next quarter.",
-    date: new Date("2024-06-08").toISOString(),
+    date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Elizabeth Chemical Storage Facility",
@@ -102,7 +102,7 @@ const sampleInspections = [
     coordinates_lng: -74.2107,
     notes:
       "Multiple violations identified. Site poses potential environmental risk. Urgent compliance required.",
-    date: new Date("2024-06-05").toISOString(),
+    date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Princeton Research Laboratory",
@@ -115,7 +115,7 @@ const sampleInspections = [
     coordinates_lng: -74.6672,
     notes:
       "University laboratory inspection. All procedures compliant with state regulations.",
-    date: new Date("2024-06-03").toISOString(),
+    date: new Date(Date.now() - 17 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Bayonne Energy Plant",
@@ -128,7 +128,7 @@ const sampleInspections = [
     coordinates_lng: -74.1143,
     notes:
       "Monitoring equipment calibration in progress. Preliminary readings show minor elevation.",
-    date: new Date("2024-06-01").toISOString(),
+    date: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Hoboken Waste Treatment Plant",
@@ -141,9 +141,8 @@ const sampleInspections = [
     coordinates_lng: -74.0323,
     notes:
       "Municipal facility operating within all parameters. Effluent quality excellent.",
-    date: new Date("2024-05-30").toISOString(),
+    date: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000).toISOString(),
   },
-  // 10 more records...
   {
     location: "Fort Lee Construction Site",
     status: "Pending",
@@ -154,7 +153,7 @@ const sampleInspections = [
     coordinates_lat: 40.8501,
     coordinates_lng: -73.9701,
     notes: "Construction halted pending soil analysis results.",
-    date: new Date("2024-05-28").toISOString(),
+    date: new Date(Date.now() - 24 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Passaic River Monitoring Station 3",
@@ -167,7 +166,7 @@ const sampleInspections = [
     coordinates_lng: -74.1943,
     notes:
       "Monthly monitoring shows concerning mercury trend. Investigating upstream sources.",
-    date: new Date("2024-05-25").toISOString(),
+    date: new Date(Date.now() - 27 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Newark Airport Fuel Storage",
@@ -180,7 +179,7 @@ const sampleInspections = [
     coordinates_lng: -74.1745,
     notes:
       "Airport authority notified. Containment measures activated. Cleanup contractor engaged.",
-    date: new Date("2024-05-22").toISOString(),
+    date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Morristown Industrial Complex",
@@ -193,7 +192,7 @@ const sampleInspections = [
     coordinates_lng: -74.4815,
     notes:
       "Quarterly inspection completed without issues. All emissions within limits.",
-    date: new Date("2024-05-20").toISOString(),
+    date: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Hackensack Landfill Site",
@@ -208,7 +207,7 @@ const sampleInspections = [
     coordinates_lat: 40.8859,
     coordinates_lng: -74.0434,
     notes: "Landfill operator has 30 days to submit corrective action plan.",
-    date: new Date("2024-05-18").toISOString(),
+    date: new Date(Date.now() - 37 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Asbury Park Marina",
@@ -221,7 +220,7 @@ const sampleInspections = [
     coordinates_lng: -74.0121,
     notes:
       "Seasonal marina inspection. All fuel handling procedures compliant.",
-    date: new Date("2024-05-15").toISOString(),
+    date: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Hamilton Township Solar Farm",
@@ -234,7 +233,7 @@ const sampleInspections = [
     coordinates_lng: -74.6896,
     notes:
       "Post-construction environmental assessment. Minimal ecological impact observed.",
-    date: new Date("2024-05-12").toISOString(),
+    date: new Date(Date.now() - 43 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Red Bank Chemical Distribution",
@@ -250,7 +249,7 @@ const sampleInspections = [
     coordinates_lng: -74.0776,
     notes:
       "Distribution facility requires immediate compliance update. Safety concerns noted.",
-    date: new Date("2024-05-10").toISOString(),
+    date: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Vineland Agricultural Processing",
@@ -263,7 +262,7 @@ const sampleInspections = [
     coordinates_lng: -75.026,
     notes:
       "Agricultural runoff assessment ongoing. Working with facility on best management practices.",
-    date: new Date("2024-05-08").toISOString(),
+    date: new Date(Date.now() - 47 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     location: "Lakewood Medical Waste Facility",
@@ -276,7 +275,7 @@ const sampleInspections = [
     coordinates_lng: -74.2179,
     notes:
       "Medical waste handling inspection passed. All sterilization and disposal protocols followed.",
-    date: new Date("2024-05-05").toISOString(),
+    date: new Date(Date.now() - 50 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];
 
@@ -303,4 +302,7 @@ const sampleInspections = [
       insp.date,
     ]);
   }
+
+  console.log("Sample inspections inserted successfully!");
+  await db.close();
 })();

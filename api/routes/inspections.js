@@ -7,7 +7,6 @@ const {
   patchInspection,
   deleteInspectionById,
   getInspectionStats,
-  debugInspections,
   searchInspections,
 } = require("../controllers/inspectionController");
 
